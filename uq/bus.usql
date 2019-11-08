@@ -1,0 +1,7 @@
+BUS paymentrequestBus from 百灵威系统工程部/agent 
+    ACCEPT apaymentrequest {
+        --记录提现待付款记录
+        var pid ID;
+        PENDING EasyBuziPaymentPending +(agency：agency，taskid：taskid，price:price,currency:currency) to pid;
+    };
+BUS paymentresultBus from 百灵威系统工程部/easyBuziPayment;

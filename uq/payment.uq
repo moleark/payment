@@ -1,0 +1,86 @@
+PENDING EasyBuziPaymentPending ver 0.1 (
+    id,
+    agency id [$user],
+    taskid bigint,    --任务号
+    price dec(12, 2) not null,
+    currency ID Currency,
+    date,
+);
+
+History EasyBuziPaymentTaskHistory (
+    date,
+    agency id [$user],
+    taskid bigint,    --任务号
+    price dec(12,2),
+    currency ID Currency,
+    createdate datetime,
+    result int,--付款状态（0未付 1已付）
+    comments char(100),  --付款备注    
+);
+
+--查询待付款任务
+QUERY SearchEasyBuziPayment()
+PAGE (
+    taskid bigint start 0,
+    agency id [$user],
+    price dec(12, 2),
+    currency ID Currency,
+    date datetime
+) {
+
+    page select p.taskid, p.agency, p.price, p.currency, p.date
+    from EasyBuziPaymentPending as p
+    where p.taskid>$pageStart
+    order by p.taskid
+    limit $pageSize;
+};
+
+/** 搜索轻代理提现付款记录*/
+QUERY SearchEasyBuziPaymentTaskHistory ()
+returns ret (
+    date datetime,
+    agency id [$user],
+    taskid bigint,    --任务号
+    price dec(12,2),
+    currency ID Currency,
+    createdate datetime,
+    result char(10),--付款状态（0未付 1已付）
+    comments char(100)  --付款备注    
+) {    
+    into ret SELECT	ht.date, ht.agency, ht.taskid, ht.price, ht.currency,ht.createdate,case when ht.result=1 then '已付' else '未付' end as result,ht.comments
+    FROM    EasyBuziPaymentTaskHistory as ht 
+    order by ht.date desc
+    limit 200; 
+};
+
+--财务确认付款后，记录提现已付款记录
+ACTION AddEasyBuziPaymentTask(
+    taskid bigint,
+    result int,--付款状态（0未付 1已付）
+    comments char(100)  --付款备注
+){
+    VAR agency id;
+    VAR price dec(12,2);
+    VAR currency id;
+    VAR createdate date;
+    VAR num int;
+
+    set num=count(1)
+    from   EasyBuziPaymentTaskHistory 
+    where  taskid=taskid
+
+    if (num=0) {
+        SET agency=agency
+            ,price=price
+            ,currency=currency
+            ,createdate=date
+        from    EasyBuziPaymentPending
+        WHERE   taskid=taskid
+
+        history EasyBuziPaymentTaskHistory
+        set taskid=taskid,agency=agency,price=price,currency=currency,createdate=createdate,result=result,comments=comments;
+    }
+    delete from EasyBuziPaymentPending where taskid=taskid;
+
+    bus paymentresultBus.paymentresult set taskid=taskid,result=result,comments=comments;
+};
