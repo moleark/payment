@@ -1,5 +1,6 @@
 {
   "name": "payment",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -27,6 +28,8 @@
     "typescript": "3.6.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "set PORT=7780 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
