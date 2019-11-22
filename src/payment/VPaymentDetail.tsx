@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { tv } from 'tonva';
 import { CPayment } from './CPayment';
 import dayjs from 'dayjs';
+import { ProductImage } from 'tools/productImage';
 
 export class VPaymentDetail extends VPage<CPayment> {
 
@@ -52,6 +53,7 @@ export class VPaymentDetail extends VPage<CPayment> {
                     <i className="fa fa-download fa-stack-1x text-white"></i>
                 </span>
             </div>;
+        let identityimage = this.identityicon === null ? "无" : <ProductImage chemicalId={this.identityicon} className="img-thumbnail w-50" />;
         return <Page header={header} right={right} headerClassName="bg-primary">
             <div className="h2 m-3 text-center">
                 <i className="fa fa-jpy fa-jpy-2x" aria-hidden="true"></i>
@@ -75,6 +77,7 @@ export class VPaymentDetail extends VPage<CPayment> {
                     <div><span className="py-2 px-4 pr-5 align-middle text-muted small">收方开户名</span><span className="small">{this.identityname}</span></div>
                     <div><span className="py-2 px-4 align-middle text-muted small">收方银行账号</span><span className="px-2 small">{this.bankaccountnumber}</span></div>
                     <div><span className="py-2 px-4 align-middle text-muted small">收方开户行支行</span><span className="small">{this.subbranchbank}</span></div>
+                    <div><p><span className="py-2 px-4 align-middle text-muted small">身份证复印件</span><span className="py-2 small">{identityimage}</span></p></div>
                 </div>
             </div>
             <div className="py-2 bg-white mb-3">
