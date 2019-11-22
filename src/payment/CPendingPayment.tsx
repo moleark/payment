@@ -42,6 +42,7 @@ export class CPendingPayment extends CUqBase {
                 , agency: chs.agency
                 , createdate: dayjs(chs.createdate).add(8, 'hour')
                 , result: chs.result
+                , comments: chs.comments
             })
         });
     }
