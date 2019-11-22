@@ -1,26 +1,30 @@
 import * as React from 'react';
-import { View,EasyDate,tv,LMR } from 'tonva';
+import { observer } from 'mobx-react';
+import { View, EasyDate, FA, LMR, List } from 'tonva';
 import { CPendingPayment } from './CPendingPayment';
+import dayjs from 'dayjs';
 
 export class VPendingPayment extends View<CPendingPayment> {
 
-    private renderRootCategory = async (item: any, parent: any) => {
-        let { agency, date, taskid, price,currency } = item;
-        let right = 
-        <span>
-            <i className="fa fa-jpy fa-jpy-2x" aria-hidden="true"></i>
-            {price}
-        </span>;
-        return <LMR right={right} className="px-3 py-2">
-        <div onClick={() => this.controller.onWebUserNameSelected(item)}>
-        <span>{tv(agency, v => <>{v.name}</>)}&nbsp; {<EasyDate date={date} />}</span>
+    private renderRootCategory = (item: any, parent: any) => {
+        let { date, price, agency } = item;
 
-        </div>
-    </LMR>
+        let left = <div><div> {dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</div>
+            <div>{this.controller.renderInventory(agency.id)}</div></div>
+        let right = <div><i className="fa fa-jpy fa-jpy-2x" aria-hidden="true"></i>{price}
+            &nbsp; <FA name="chevron-right" className="text-primary" />
+        </div>;
+        return <div className="d-block p-1">
+            <LMR left={left} right={right} className="px-3 py-1" onClick={() => this.controller.onWebUserNameSelected(item)}>
+            </LMR></div>
     }
 
     render(param: any): JSX.Element {
-        let { cashouts } = this.controller;
-        return <>{cashouts.map(v => this.renderRootCategory(v, undefined))}</>;
+        return <this.content />
     }
+
+    private content = observer(() => {
+        let { cashouts } = this.controller;
+        return <List items={cashouts} item={{ render: this.renderRootCategory }} none="目前还没有要处理待办事宜哦！" />;
+    });
 } 

@@ -2,15 +2,21 @@ import { Query,Map,Tuid, Action } from "tonva";
 
 export interface UqPayment {
     SearchEasyBuziPayment: Query;
-    SearchEasyBuziPaymentTaskHistory: Query;
+    SearchEasyBuziPaymentTaskAccount: Query;
     AddEasyBuziPaymentTask:Action;
 }
 
-export interface UqWebUser {
-    WebUser: Tuid;
+export interface UqSalesTask {
     WebUserAccountMap: Map;
+    $user: Tuid;
 }
+
+export interface UqCommon {
+    Currency: Tuid;
+}
+
 export interface UQs {
-    easyBuziPayment: UqPayment;
-    webuser: UqWebUser;
+    ebPayment: UqPayment;
+    salesTask: UqSalesTask;
+    common: UqCommon;
 }

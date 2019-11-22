@@ -7,56 +7,56 @@ PENDING EasyBuziPaymentPending ver 0.1 (
     date,
 );
 
-History EasyBuziPaymentTaskHistory (
-    date,
-    agency id [$user],
-    taskid bigint,    --任务号
+BOOK EasyBuziPaymentTaskAccount (
+    key taskid bigint,    --任务号
+    key agency id [$user],
+    date datetime,
     price dec(12,2),
     currency ID Currency,
     createdate datetime,
-    result int,--付款状态（0未付 1已付）
+    result int,--付款状态（0驳回 1已付）
     comments char(100),  --付款备注    
 );
 
 --查询待付款任务
 QUERY SearchEasyBuziPayment()
-PAGE (
-    taskid bigint start 0,
+returns ret (
+    id bigint,
+    taskid bigint,
     agency id [$user],
     price dec(12, 2),
     currency ID Currency,
     date datetime
 ) {
 
-    page select p.taskid, p.agency, p.price, p.currency, p.date
+    into ret select p.id, p.taskid, p.agency, p.price, p.currency, p.date
     from EasyBuziPaymentPending as p
-    where p.taskid>$pageStart
     order by p.taskid
-    limit $pageSize;
+    limit 200;
 };
 
 /** 搜索轻代理提现付款记录*/
-QUERY SearchEasyBuziPaymentTaskHistory ()
+QUERY SearchEasyBuziPaymentTaskAccount ()
 returns ret (
-    date datetime,
     agency id [$user],
     taskid bigint,    --任务号
     price dec(12,2),
     currency ID Currency,
     createdate datetime,
-    result char(10),--付款状态（0未付 1已付）
+    result char(10),--付款状态（0驳回 1已付）
+    date datetime,
     comments char(100)  --付款备注    
 ) {    
-    into ret SELECT	ht.date, ht.agency, ht.taskid, ht.price, ht.currency,ht.createdate,case when ht.result=1 then '已付' else '未付' end as result,ht.comments
-    FROM    EasyBuziPaymentTaskHistory as ht 
-    order by ht.date desc
-    limit 200; 
+    into ret SELECT	ht.agency, ht.taskid, ht.price, ht.currency,ht.createdate,case when ht.result=1 then '已付' else '驳回' end as result,ht.date, ht.comments
+    FROM    EasyBuziPaymentTaskAccount as ht 
+    order by ht.date desc;
 };
 
 --财务确认付款后，记录提现已付款记录
 ACTION AddEasyBuziPaymentTask(
+    pendingid bigint,
     taskid bigint,
-    result int,--付款状态（0未付 1已付）
+    result int,--付款状态（0驳回 1已付）
     comments char(100)  --付款备注
 ){
     VAR agency id;
@@ -66,21 +66,21 @@ ACTION AddEasyBuziPaymentTask(
     VAR num int;
 
     set num=count(1)
-    from   EasyBuziPaymentTaskHistory 
-    where  taskid=taskid
+    from   EasyBuziPaymentTaskAccount as a
+    where  a.taskid=taskid;
 
     if (num=0) {
-        SET agency=agency
-            ,price=price
-            ,currency=currency
-            ,createdate=date
-        from    EasyBuziPaymentPending
-        WHERE   taskid=taskid
+        SET agency=a.agency
+            ,price=a.price
+            ,currency=a.currency
+            ,createdate=a.date
+        from    EasyBuziPaymentPending as a
+        WHERE   a.taskid=taskid;
 
-        history EasyBuziPaymentTaskHistory
-        set taskid=taskid,agency=agency,price=price,currency=currency,createdate=createdate,result=result,comments=comments;
+        book EasyBuziPaymentTaskAccount at (taskid,agency) set price=price,currency=currency,createdate=createdate,result=result,comments=comments,date=now();
     }
-    delete from EasyBuziPaymentPending where taskid=taskid;
 
-    bus paymentresultBus.paymentresult set taskid=taskid,result=result,comments=comments;
+    Pending EasyBuziPaymentPending - at pendingid;
+
+    bus paymentresultBus.paymentresult set withdrawal=taskid,result=result,comments=comments;
 };

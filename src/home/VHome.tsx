@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { CHome } from './CHome';
 import { Page, View } from 'tonva';
+import { VSiteHeader } from './VSiteHeader';
+
 
 export class VHome extends View<CHome> {
 
@@ -21,7 +23,9 @@ export class VHome extends View<CHome> {
     private content = () => {
         let { controller } = this;
         let { toCashOutList } = controller;
+        let siteHeader = this.renderVm(VSiteHeader);
         return <>
+            {siteHeader}
             {toCashOutList()}
         </>
     };

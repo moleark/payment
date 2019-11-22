@@ -3,6 +3,7 @@ import { UQs } from "./uqs";
 import { CUqBase } from "./CBase";
 import { VMain } from './ui/main';
 import { CHome } from "./home/CHome";
+import { CPayment } from './payment/CPayment';
 import { CPendingPayment } from './payment/CPendingPayment';
 
 export class CApp extends CAppBase {
@@ -11,6 +12,7 @@ export class CApp extends CAppBase {
     topKey: any;
 
     cHome: CHome;
+    cPayment: CPayment;
     cPendingPayment: CPendingPayment;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
@@ -20,6 +22,7 @@ export class CApp extends CAppBase {
     protected async internalStart() {
 
         this.cHome = this.newC(CHome);
+        this.cPayment = this.newC(CPayment);
         this.cPendingPayment = this.newC(CPendingPayment); 
 
         let promises: PromiseLike<void>[] = [];
@@ -31,5 +34,8 @@ export class CApp extends CAppBase {
 
     showMain(initTabName?: string) {
         this.openVPage(VMain, initTabName);
+    }
+    async loginCallBack(user: User) {
+
     }
 }

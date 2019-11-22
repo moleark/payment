@@ -9,10 +9,10 @@ export class VMain extends VPage<CApp> {
         this.openPage(this.render);
     }
     render = (param?: any): JSX.Element => {
-        let { cHome } = this.controller;
+        let { cHome,cPayment } = this.controller;
         let faceTabs = [
-            { name: 'home', label: '待付款', icon: 'home', content: cHome.tab, notify: undefined/*store.homeCount*/ },
-            //{ name: 'paid', label: '已付款', icon: 'book', content: cHome.tab, notify: undefined }
+            { name: 'home', label: '待办事宜', icon: 'check-square-o', content: cHome.tab, notify: undefined/*store.homeCount*/ },
+            { name: 'paid', label: '已办事宜', icon: 'history', content: cPayment.tab}
         ].map(v => {
             let { name, label, icon, content, notify } = v;
             return {
