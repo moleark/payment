@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, BoxId } from 'tonva';
+import { View, BoxId, Image } from 'tonva';
 import { CUqBase } from '../CBase';
 import { nav } from 'tonva';
 import { VPendingPayment } from './VPendingPayment';
@@ -9,6 +9,8 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PaymentSuccess } from './PaymentSuccess';
 import dayjs from 'dayjs';
+import { ProductImage } from 'tools/productImage';
+import logo from '../images/logo.png';
 
 export class CPendingPayment extends CUqBase {
 
@@ -17,6 +19,7 @@ export class CPendingPayment extends CUqBase {
     @observable cashouthistory: any[] = [];
     @observable cashouthistorys: any[] = [];
     @observable agencyuser: any;
+    @observable agencyIcon: any;
 
     async internalStart(param: any) {
         this.cashout = await this.uqs.ebPayment.SearchEasyBuziPayment.table(undefined);
@@ -60,12 +63,17 @@ export class CPendingPayment extends CUqBase {
         }
         return agencyMap.ret[0];
     }
-    /**
+
     getAgency = async (agencyid: number) => {
-        let agency = await this.uqs.salesTask.$user.boxId(agencyid);
+        let agency = await this.uqs.salesTask.$user.load(agencyid);
+        if (agency !== null) {
+            this.agencyIcon = agency.icon;
+        } else {
+            this.agencyIcon = null;
+        }
         return agency;
     }
-    */
+
     /**
     * 打开新建界面
     */
@@ -113,6 +121,9 @@ export class CPendingPayment extends CUqBase {
     renderInventory = (agencyid: BoxId) => {
         return this.renderView(VInventoryView, agencyid);
     }
+    renderUserIcon = (agencyid: BoxId) => {
+        return this.renderView(VUserIconView, agencyid);
+    }
 }
 
 export class VInventoryView extends View<CPendingPayment> {
@@ -126,5 +137,19 @@ export class VInventoryView extends View<CPendingPayment> {
         let LocationUI;
         LocationUI = <div className="text-muted small">{this.controller.agencyuser}</div>;
         return LocationUI;
+    });
+}
+
+export class VUserIconView extends View<CPendingPayment> {
+
+    render(param: any): JSX.Element {
+        let { controller } = this;
+        controller.getAgency(param);
+        return <this.contentagencyUser />
+    }
+    protected contentagencyUser = observer((param: any) => {
+        let icon = this.controller.agencyIcon;
+        let identityimage = icon === null ? <Image src={logo} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} /> : <Image src={icon} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} />;
+        return <span>{identityimage}</span>;
     });
 }

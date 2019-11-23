@@ -9,7 +9,7 @@ export class VPendingPayment extends View<CPendingPayment> {
     private renderRootCategory = (item: any, parent: any) => {
         let { date, price, agency } = item;
 
-        let left = <div><div> {dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</div>
+        let left = <div><div> {this.controller.renderUserIcon(agency.id)}{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</div>
             <div>{this.controller.renderInventory(agency.id)}</div></div>
         let right = <div><i className="fa fa-jpy fa-jpy-2x" aria-hidden="true"></i>{price}
             &nbsp; <FA name="chevron-right" className="text-primary" />

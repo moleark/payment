@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { CHome } from './CHome';
 import { Page, View } from 'tonva';
-import { VSiteHeader } from './VSiteHeader';
-
 
 export class VHome extends View<CHome> {
 
@@ -11,11 +9,14 @@ export class VHome extends View<CHome> {
     }
 
     render(param: any): JSX.Element {
-        return <this.content />
+        return <this.page />
     }
 
     private page = () => {
-        return <Page header={false}>
+        let header = <header className="py-2 px-4 text-center text-white">
+            <span className="h5 align-middle" style={{ textAlign: 'center' }}>待办事宜</span>
+        </header>;
+        return <Page header={header} headerClassName="bg-primary">
             <this.content />
         </Page>;
     };
@@ -23,9 +24,7 @@ export class VHome extends View<CHome> {
     private content = () => {
         let { controller } = this;
         let { toCashOutList } = controller;
-        let siteHeader = this.renderVm(VSiteHeader);
         return <>
-            {siteHeader}
             {toCashOutList()}
         </>
     };

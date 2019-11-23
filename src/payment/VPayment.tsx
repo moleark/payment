@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
-import { VPage, EasyDate, tv, LMR } from 'tonva';
+import { VPage, Page, EasyDate, tv, LMR } from 'tonva';
 import { CPayment } from './CPayment';
-import { VPSiteHeader } from './VPSiteHeader';
 import dayjs from 'dayjs';
 
 export class VPayment extends VPage<CPayment> {
 
     async open(param?: any) {
-
+        this.openPage(this.page);
     }
 
     private renderRootCategory = (item: any, parent: any) => {
@@ -16,13 +15,19 @@ export class VPayment extends VPage<CPayment> {
         let left =
             <div>
                 <div className="small">
+                    {this.controller.cApp.cPendingPayment.renderUserIcon(agency.id)}
+                </div>
+                <div className="small">
+                    {this.controller.cApp.cPendingPayment.renderInventory(agency.id)}
+                </div>
+            </div>;
+        let left1 =
+            <div>
+                <div className="small">
                     <span>申请时间：{dayjs(createdate).format('YYYY-MM-DD HH:mm:ss')}</span>
                 </div>
                 <div className="small">
                     <span>确认时间：{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</span>
-                </div>
-                <div className="small">
-                    {this.controller.cApp.cPendingPayment.renderInventory(agency.id)}
                 </div>
             </div>;
         let color = result === "已付" ? <div className="h4 mb-0 text-success small text-right">{result}</div> : <div className="h4 mb-0 text-danger small  text-right">{result}</div>;
@@ -39,19 +44,27 @@ export class VPayment extends VPage<CPayment> {
 
         return <div className="py-1" onClick={() => this.controller.onPaymentSelected(item)} >
             <LMR left={left} right={right} className="px-3 py-2 bg-white" >
+                {left1}
             </LMR>
         </div>
     }
 
+    private page = () => {
+        let header = <header className="py-2 px-4 text-center text-white">
+            <span className="h5 align-middle" style={{ textAlign: 'center' }}>已办事宜</span>
+        </header>;
+        return <Page header={header} headerClassName="bg-primary">
+            <this.content />
+        </Page>;
+    };
+
     render() {
-        return <this.content />
+        return <this.page />
     }
 
     private content = observer(() => {
         let { cashouthistorys } = this.controller.cApp.cPendingPayment;
-        let siteHeader = this.renderVm(VPSiteHeader);
         return <>
-            {siteHeader}
             {cashouthistorys.map(v => this.renderRootCategory(v, undefined))}</>;
     });
 } 
