@@ -10,7 +10,8 @@ import { observer } from 'mobx-react';
 import { PaymentSuccess } from './PaymentSuccess';
 import dayjs from 'dayjs';
 import { ProductImage } from 'tools/productImage';
-import logo from '../images/logo.png';
+import logo from '../images/icon.jpg';
+import { string } from 'prop-types';
 
 export class CPendingPayment extends CUqBase {
 
@@ -18,8 +19,8 @@ export class CPendingPayment extends CUqBase {
     @observable cashouts: any[] = [];
     @observable cashouthistory: any[] = [];
     @observable cashouthistorys: any[] = [];
-    @observable agencyuser: any;
-    @observable agencyIcon: any;
+    @observable agencyuser: { [agencyid: number]: any } = {};
+    @observable agencyIcon: { [agencyid: number]: any } = {};
 
     async internalStart(param: any) {
         this.cashout = await this.uqs.ebPayment.SearchEasyBuziPayment.table(undefined);
@@ -57,9 +58,9 @@ export class CPendingPayment extends CUqBase {
     getAccounts = async (agencyid: number) => {
         let agencyMap = await this.uqs.salesTask.WebUserAccountMap.query({ webuser: agencyid });
         if (agencyMap.ret.length > 0) {
-            this.agencyuser = agencyMap.ret[0].identityname;
+            this.agencyuser[agencyid] = agencyMap.ret[0].identityname;
         } else {
-            this.agencyuser = null;
+            this.agencyuser[agencyid] = null;
         }
         return agencyMap.ret[0];
     }
@@ -67,9 +68,9 @@ export class CPendingPayment extends CUqBase {
     getAgency = async (agencyid: number) => {
         let agency = await this.uqs.salesTask.$user.load(agencyid);
         if (agency !== null) {
-            this.agencyIcon = agency.icon;
+            this.agencyIcon[agencyid] = agency.icon;
         } else {
-            this.agencyIcon = null;
+            this.agencyIcon[agencyid] = null;
         }
         return agency;
     }
@@ -131,11 +132,12 @@ export class VInventoryView extends View<CPendingPayment> {
     render(param: any): JSX.Element {
         let { controller } = this;
         controller.getAccounts(param);
-        return <this.contentagency />
+        return <this.contentagency agencyid={param} />
     }
     protected contentagency = observer((param: any) => {
         let LocationUI;
-        LocationUI = <div className="text-muted small">{this.controller.agencyuser}</div>;
+        let { agencyid } = param;
+        LocationUI = <div className="text-muted small">{this.controller.agencyuser[agencyid]}</div>;
         return LocationUI;
     });
 }
@@ -145,10 +147,11 @@ export class VUserIconView extends View<CPendingPayment> {
     render(param: any): JSX.Element {
         let { controller } = this;
         controller.getAgency(param);
-        return <this.contentagencyUser />
+        return <this.contentagencyUser agencyid={param} />
     }
     protected contentagencyUser = observer((param: any) => {
-        let icon = this.controller.agencyIcon;
+        let { agencyid } = param;
+        let icon = this.controller.agencyIcon[agencyid];
         let identityimage = icon === null ? <Image src={logo} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} /> : <Image src={icon} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} />;
         return <span>{identityimage}</span>;
     });
