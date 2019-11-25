@@ -13,7 +13,7 @@ export class VPayment extends VPage<CPayment> {
     private renderRootCategory = (item: any, parent: any) => {
         let { date, price, createdate, result, agency } = item;
         let left =
-            <div>
+            <div className="mr-3">
                 <div className="small">
                     {this.controller.cApp.cPendingPayment.renderUserIcon(agency.id)}
                 </div>

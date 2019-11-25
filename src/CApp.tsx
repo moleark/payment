@@ -23,8 +23,7 @@ export class CApp extends CAppBase {
 
         this.cHome = this.newC(CHome);
         this.cPayment = this.newC(CPayment);
-        this.cPendingPayment = this.newC(CPendingPayment); 
-
+        this.cPendingPayment = this.newC(CPendingPayment);
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cPendingPayment.start());
         await Promise.all(promises);

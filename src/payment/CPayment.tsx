@@ -7,7 +7,6 @@ import { VPaymentVoucher } from './VPaymentVoucher';
 export class CPayment extends CUqBase {
 
     protected async internalStart() {
-
     }
 
     tab = () => this.renderView(VPayment);

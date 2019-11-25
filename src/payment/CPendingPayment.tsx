@@ -27,26 +27,38 @@ export class CPendingPayment extends CUqBase {
     }
 
     private add8() {
-        // 时差处理
-        this.cashout.forEach(ch => {
-            this.cashouts.push({
-                date: dayjs(ch.date).add(8, 'hour')
-                , price: ch.price
-                , agency: ch.agency
-                , taskid: ch.taskid
-                , id: ch.id
-            })
-        });
-        this.cashouthistory.forEach(chs => {
-            this.cashouthistorys.push({
-                date: dayjs(chs.date).add(8, 'hour')
-                , price: chs.price
-                , agency: chs.agency
-                , createdate: dayjs(chs.createdate).add(8, 'hour')
-                , result: chs.result
-                , comments: chs.comments
-            })
-        });
+        function chinaOffset(d: Date): Date {
+            if (d === undefined) return;
+            let ret = new Date((d.getTime() + 8 * 3600 * 1000));
+            return ret;
+        }
+        try {
+            // 时差处理
+            this.cashout.forEach(ch => {
+                let { date, price, agency, taskid, id } = ch;
+                this.cashouts.push({
+                    date: chinaOffset(date) //  dayjs(ch.date).add(8, 'hour')
+                    , price: price
+                    , agency: agency
+                    , taskid: taskid
+                    , id: id
+                })
+            });
+            this.cashouthistory.forEach(chs => {
+                let { date, createdate } = chs;
+                this.cashouthistorys.push({
+                    date: chinaOffset(date) // dayjs(chs.date).add(8, 'hour')
+                    , price: chs.price
+                    , agency: chs.agency
+                    , createdate: chinaOffset(createdate) // dayjs(chs.createdate).add(8, 'hour')
+                    , result: chs.result
+                    , comments: chs.comments
+                })
+            });
+        }
+        catch (err) {
+            debugger;
+        }
     }
 
     renderRootList() {
@@ -90,6 +102,8 @@ export class CPendingPayment extends CUqBase {
             comments: comments,
         };
         await this.uqs.ebPayment.AddEasyBuziPaymentTask.submit(param);
+        let index = this.cashouts.findIndex(v => v.taskid === taskid);
+        this.cashouts.splice(index, 1);
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
         this.openVPage(PaymentSuccess, result);
@@ -113,8 +127,11 @@ export class CPendingPayment extends CUqBase {
         };
         await this.uqs.ebPayment.AddEasyBuziPaymentTask.submit(param);
         // 打开下单成功显示界面
+        //nav.popTo(this.cApp.topKey);
+        let index = this.cashouts.findIndex(v => v.id === id);
+        this.cashouts.splice(index, 1);
         nav.popTo(this.cApp.topKey);
-        this.openVPage(PaymentSuccess, task);
+        //this.openVPage(PaymentSuccess, task);
     }
 
     renderInventory = (agencyid: BoxId) => {

@@ -48,7 +48,7 @@ export class VPaymentVoucher extends VPage<CPayment> {
         let header = <header className="py-2 text-center text-white">
             <span className="h5 align-middle">付款凭证</span>
         </header>;
-        let identityimage = this.identityicon === null ? "无" : <ProductImage chemicalId={this.identityicon} className="img-thumbnail" />;
+        let identityimage = this.identityicon === null ? "无" : <ProductImage chemicalId={this.identityicon} className="img-thumbnail w-50" />;
         return <Page header={header} headerClassName="bg-primary">
             <div className="m-1 text-center">
                 <table className="table">
@@ -62,32 +62,29 @@ export class VPaymentVoucher extends VPage<CPayment> {
                 </table>
                 <table className="table table-bordered">
                     <tr>
-                        <td><h5 style={{ width: '50px', fontWeight: 'bold', textAlign: 'left' }}>即付</h5></td>
-                        <td colSpan={2}><h5 style={{ fontWeight: 'bold' }}>服务费</h5></td>
+                        <td><h6 style={{ width: '50px', textAlign: 'left' }}>即付</h6></td>
+                        <td colSpan={2}><h6>服务费</h6></td>
                     </tr>
                     <tr>
-                        <td colSpan={3}><h5 style={{ textAlign: 'right', fontWeight: 'bold' }}>对方科目编号</h5></td>
+                        <td><h6 style={{ textAlign: 'left' }}>付款账户</h6></td>
+                        <td colSpan={2}><h6 style={{ textAlign: 'left' }}>北京百灵威</h6></td>
                     </tr>
                     <tr>
-                        <td><h5 style={{ textAlign: 'left', fontWeight: 'bold' }}>付款账户</h5></td>
-                        <td colSpan={2}><h5 style={{ textAlign: 'left', fontWeight: 'bold' }}>北京百灵威</h5></td>
+                        <td><h6 style={{ textAlign: 'left' }}>计人民币</h6></td>
+                        <td><h6 className="text-uppercase" style={{ textAlign: 'left' }}>{this.controller.digitUppercase(price)}</h6></td>
+                        <td><h6 style={{ textAlign: 'left' }}><i className="fa fa-jpy fa-jpy-2x" aria-hidden="true"></i>{price}</h6></td>
                     </tr>
                     <tr>
-                        <td><h5 style={{ textAlign: 'left', fontWeight: 'bold' }}>计人民币</h5></td>
-                        <td><h5 className="text-uppercase" style={{ textAlign: 'left', fontWeight: 'bold' }}>{this.controller.digitUppercase(price)}</h5></td>
-                        <td><h5 style={{ textAlign: 'left', fontWeight: 'bold' }}><i className="fa fa-jpy fa-jpy-2x" aria-hidden="true"></i>{price}</h5></td>
-                    </tr>
-                    <tr>
-                        <td><h5 style={{ fontWeight: 'bold' }}>领款人：</h5></td>
-                        <td><h5 style={{ textAlign: 'left' }}>{this.identityname}</h5></td>
-                        <td><h5 style={{ textAlign: 'left', fontWeight: 'bold' }}>主管审批：系统管理员</h5></td>
+                        <td><h6>领款人：</h6></td>
+                        <td><h6 style={{ textAlign: 'left' }}>{this.identityname}</h6></td>
+                        <td><h6 style={{ textAlign: 'left' }}>主管审批：系统管理员</h6></td>
                     </tr>
                 </table>
                 <div>
                     <table className="table" cellPadding={0} cellSpacing={0} style={{ border: '0', borderTopStyle: 'hidden' }}>
                         <tr>
-                            <td><h5 style={{ textAlign: 'left' }}>财务审批人 张园</h5></td>
-                            <td><h5 style={{ textAlign: 'right' }} >提交付款要求人 {this.identityname}</h5></td>
+                            <td><h6 style={{ textAlign: 'left' }}>财务审批人 张园</h6></td>
+                            <td><h6 style={{ textAlign: 'right' }} >提交付款要求人 {this.identityname}</h6></td>
                         </tr>
                     </table>
                 </div>
