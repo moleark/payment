@@ -9,9 +9,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PaymentSuccess } from './PaymentSuccess';
 import dayjs from 'dayjs';
-import { ProductImage } from 'tools/productImage';
-import logo from '../images/icon.jpg';
-import { string } from 'prop-types';
+import iconj from '../images/icon.jpg';
 
 export class CPendingPayment extends CUqBase {
 
@@ -67,10 +65,10 @@ export class CPendingPayment extends CUqBase {
 
     getAgency = async (agencyid: number) => {
         let agency = await this.uqs.salesTask.$user.load(agencyid);
-        if (agency !== null) {
+        if (agency !== null && agency !== undefined) {
             this.agencyIcon[agencyid] = agency.icon;
         } else {
-            this.agencyIcon[agencyid] = null;
+            this.agencyIcon[agencyid] = undefined;
         }
         return agency;
     }
@@ -152,7 +150,7 @@ export class VUserIconView extends View<CPendingPayment> {
     protected contentagencyUser = observer((param: any) => {
         let { agencyid } = param;
         let icon = this.controller.agencyIcon[agencyid];
-        let identityimage = icon === null ? <Image src={logo} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} /> : <Image src={icon} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} />;
+        let identityimage = icon === undefined ? <Image src={iconj} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} /> : <Image src={icon} className="w-2c h-2c circle" style={{ borderRadius: '50%' }} />;
         return <span>{identityimage}</span>;
     });
 }
