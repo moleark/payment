@@ -13,20 +13,20 @@ export class VPayment extends VPage<CPayment> {
     private renderRootCategory = (item: any, parent: any) => {
         let { date, price, createdate, result, agency } = item;
         let left =
-            <div className="mr-3">
-                <div className="small">
+            <div className="mr-3 small">
+                <div>
                     {this.controller.cApp.cPendingPayment.renderUserIcon(agency.id)}
                 </div>
-                <div className="small">
+                <div>
                     {this.controller.cApp.cPendingPayment.renderInventory(agency.id)}
                 </div>
             </div>;
         let left1 =
-            <div>
-                <div className="small">
+            <div className="small">
+                <div>
                     <span>申请时间：{dayjs(createdate).format('YYYY-MM-DD HH:mm:ss')}</span>
                 </div>
-                <div className="small">
+                <div>
                     <span>确认时间：{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</span>
                 </div>
             </div>;
@@ -63,7 +63,7 @@ export class VPayment extends VPage<CPayment> {
     }
 
     private content = observer(() => {
-        let { cashouthistorys } = this.controller.cApp.cPendingPayment;
+        let { cashouthistorys } = this.controller;
         return <>
             {cashouthistorys.map(v => this.renderRootCategory(v, undefined))}</>;
     });

@@ -1,12 +1,46 @@
 import { CUqBase } from '../CBase';
 import { VPayment } from './VPayment';
 import { VPaymentDetail } from './VPaymentDetail';
-import { VPaymentVouchercopy } from './VPaymentVouchercopy';
+import { observable } from 'mobx';
 import { VPaymentVoucher } from './VPaymentVoucher';
 
 export class CPayment extends CUqBase {
 
+    @observable cashouthistory: any[] = [];
+    @observable cashouthistorys: any[] = [];
+
     protected async internalStart() {
+        await this.load();
+    }
+
+    load = async () => {
+        this.cashouthistory = await this.uqs.ebPayment.SearchEasyBuziPaymentTaskAccount.table(undefined);
+        this.add8();
+    }
+
+    private add8() {
+        function chinaOffset(d: Date): Date {
+            if (d === undefined) return;
+            let ret = new Date((d.getTime() + 8 * 3600 * 1000));
+            return ret;
+        }
+        try {
+            // 时差处理
+            this.cashouthistory.forEach(chs => {
+                let { date, createdate } = chs;
+                this.cashouthistorys.push({
+                    date: chinaOffset(date) // dayjs(chs.date).add(8, 'hour')
+                    , price: chs.price
+                    , agency: chs.agency
+                    , createdate: chinaOffset(createdate) // dayjs(chs.createdate).add(8, 'hour')
+                    , result: chs.result
+                    , comments: chs.comments
+                })
+            });
+        }
+        catch (err) {
+            debugger;
+        }
     }
 
     tab = () => this.renderView(VPayment);

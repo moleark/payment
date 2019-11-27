@@ -8,21 +8,17 @@ import { VRejectPayment } from './VRejectPayment';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { PaymentSuccess } from './PaymentSuccess';
-import dayjs from 'dayjs';
 import iconj from '../images/icon.jpg';
 
 export class CPendingPayment extends CUqBase {
 
     @observable cashout: any[] = [];
     @observable cashouts: any[] = [];
-    @observable cashouthistory: any[] = [];
-    @observable cashouthistorys: any[] = [];
     @observable agencyuser: { [agencyid: number]: any } = {};
     @observable agencyIcon: { [agencyid: number]: any } = {};
 
     async internalStart(param: any) {
         this.cashout = await this.uqs.ebPayment.SearchEasyBuziPayment.table(undefined);
-        this.cashouthistory = await this.uqs.ebPayment.SearchEasyBuziPaymentTaskAccount.table(undefined);
         this.add8();
     }
 
@@ -42,17 +38,6 @@ export class CPendingPayment extends CUqBase {
                     , agency: agency
                     , taskid: taskid
                     , id: id
-                })
-            });
-            this.cashouthistory.forEach(chs => {
-                let { date, createdate } = chs;
-                this.cashouthistorys.push({
-                    date: chinaOffset(date) // dayjs(chs.date).add(8, 'hour')
-                    , price: chs.price
-                    , agency: chs.agency
-                    , createdate: chinaOffset(createdate) // dayjs(chs.createdate).add(8, 'hour')
-                    , result: chs.result
-                    , comments: chs.comments
                 })
             });
         }
@@ -106,7 +91,7 @@ export class CPendingPayment extends CUqBase {
         this.cashouts.splice(index, 1);
         // 打开下单成功显示界面
         nav.popTo(this.cApp.topKey);
-        this.openVPage(PaymentSuccess, result);
+        this.openVPage(PaymentSuccess);
     }
 
     /**
@@ -127,11 +112,10 @@ export class CPendingPayment extends CUqBase {
         };
         await this.uqs.ebPayment.AddEasyBuziPaymentTask.submit(param);
         // 打开下单成功显示界面
-        //nav.popTo(this.cApp.topKey);
         let index = this.cashouts.findIndex(v => v.id === id);
         this.cashouts.splice(index, 1);
         nav.popTo(this.cApp.topKey);
-        //this.openVPage(PaymentSuccess, task);
+        this.openVPage(PaymentSuccess);
     }
 
     renderInventory = (agencyid: BoxId) => {

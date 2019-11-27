@@ -42,7 +42,7 @@ export class VPaymentDetail extends VPage<CPayment> {
 
     private page = () => {
         let taskData = _.clone(this.task);
-        let { agency, date, price, createdate, result, comments, user } = taskData;
+        let { agency, date, price, createdate, result, comments } = taskData;
 
         let header = <header className="py-2 text-center text-white">
             <span className="h5 align-middle">付款详情</span>
