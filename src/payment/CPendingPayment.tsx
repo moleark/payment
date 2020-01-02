@@ -71,7 +71,7 @@ export class CPendingPayment extends CUqBase {
     }
 
     /**
-    * 打开新建界面
+    * 打开待打印任务界面
     */
     onNewRejectTask = async (task: any) => {
         this.openVPage(VRejectPayment, task);
@@ -86,7 +86,7 @@ export class CPendingPayment extends CUqBase {
             result: 0,
             comments: comments,
         };
-        await this.uqs.ebPayment.AddEasyBuziPaymentTask.submit(param);
+        await this.uqs.ebPayment.AddPrintPaymentTask.submit(param);
         let index = this.cashouts.findIndex(v => v.taskid === taskid);
         this.cashouts.splice(index, 1);
         // 打开下单成功显示界面
@@ -110,7 +110,7 @@ export class CPendingPayment extends CUqBase {
             result: 1,
             comments: ''
         };
-        await this.uqs.ebPayment.AddEasyBuziPaymentTask.submit(param);
+        await this.uqs.ebPayment.AddPrintPaymentTask.submit(param);
         // 打开下单成功显示界面
         let index = this.cashouts.findIndex(v => v.id === id);
         this.cashouts.splice(index, 1);

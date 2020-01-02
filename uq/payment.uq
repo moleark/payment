@@ -1,4 +1,15 @@
+//待打印PENDING
 PENDING EasyBuziPaymentPending ver 0.1 (
+    id,
+    agency id [$user],
+    taskid bigint,    --任务号
+    price dec(12, 2) not null,
+    currency ID Currency,
+    date,
+);
+
+//待付款PENDING
+PENDING PrintPaymentPending ver 0.1 (
     id,
     agency id [$user],
     taskid bigint,    --任务号
@@ -18,7 +29,7 @@ BOOK EasyBuziPaymentTaskAccount (
     comments char(100),  --付款备注    
 );
 
---查询待付款任务
+--查询待打印任务   
 QUERY SearchEasyBuziPayment()
 returns ret (
     id bigint,
@@ -31,6 +42,23 @@ returns ret (
 
     into ret select p.id, p.taskid, p.agency, p.price, p.currency, p.date
     from EasyBuziPaymentPending as p
+    order by p.taskid
+    limit 200;
+};
+
+--查询待付款任务   
+QUERY SearchPrintPaymentPending()
+returns ret (
+    id bigint,
+    taskid bigint,
+    agency id [$user],
+    price dec(12, 2),
+    currency ID Currency,
+    date datetime
+) {
+
+    into ret select p.id, p.taskid, p.agency, p.price, p.currency, p.date
+    from PrintPaymentPending as p
     order by p.taskid
     limit 200;
 };
@@ -52,6 +80,39 @@ returns ret (
     order by ht.date desc;
 };
 
+--待打印任务驳回或者打印后，记录已打印记录
+ACTION AddPrintPaymentTask(
+    pendingid bigint,
+    taskid bigint,
+    result int,--付款状态（0驳回 1已打印）
+    comments char(100)  --付款备注
+){
+    VAR agency id;
+    VAR price dec(12,2);
+    VAR currency id;
+    VAR createdate date;
+
+    SET agency=a.agency
+        ,price=a.price
+        ,currency=a.currency
+        ,createdate=a.date
+    from    EasyBuziPaymentPending as a
+    WHERE   a.taskid=taskid;
+
+    if(result=1){
+        --记录打印PENDING
+        var pid ID;
+        PENDING PrintPaymentPending +(agency:agency,taskid:taskid,price:price,currency:currency) to pid;
+    }
+    --删除待打印Pending
+    Pending EasyBuziPaymentPending - at pendingid;
+    --通过bus返回已驳回结果,并记录已驳回状态
+    if(result=0){
+        book EasyBuziPaymentTaskAccount at (taskid,agency) set price=price,currency=currency,createdate=createdate,result=result,comments=comments,date=now();
+        bus paymentresultBus.paymentresult set withdrawal=taskid,result=result,comments=comments;
+    }
+};
+
 --财务确认付款后，记录提现已付款记录
 ACTION AddEasyBuziPaymentTask(
     pendingid bigint,
@@ -65,22 +126,17 @@ ACTION AddEasyBuziPaymentTask(
     VAR createdate date;
     VAR num int;
 
-    set num=count(1)
-    from   EasyBuziPaymentTaskAccount as a
-    where  a.taskid=taskid;
+    SET agency=a.agency
+        ,price=a.price
+        ,currency=a.currency
+        ,createdate=a.date
+    from    PrintPaymentPending as a
+    WHERE   a.taskid=taskid;
 
-    if (num=0) {
-        SET agency=a.agency
-            ,price=a.price
-            ,currency=a.currency
-            ,createdate=a.date
-        from    EasyBuziPaymentPending as a
-        WHERE   a.taskid=taskid;
-
-        book EasyBuziPaymentTaskAccount at (taskid,agency) set price=price,currency=currency,createdate=createdate,result=result,comments=comments,date=now();
-    }
-
-    Pending EasyBuziPaymentPending - at pendingid;
-
+    --记录付款结果
+    book EasyBuziPaymentTaskAccount at (taskid,agency) set price=price,currency=currency,createdate=createdate,result=result,comments=comments,date=now();
+    --删除待付款pending
+    Pending PrintPaymentPending - at pendingid;
+    --通过bus返回付款结果
     bus paymentresultBus.paymentresult set withdrawal=taskid,result=result,comments=comments;
 };

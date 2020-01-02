@@ -51,7 +51,7 @@ export class VPayment extends VPage<CPayment> {
 
     private page = () => {
         let header = <header className="py-2 px-4 text-center text-white">
-            <span className="h5 align-middle" style={{ textAlign: 'center' }}>已办事宜</span>
+            <span className="h5 align-middle" style={{ textAlign: 'center' }}>已支出</span>
         </header>;
         return <Page header={header} headerClassName="bg-primary">
             <this.content />

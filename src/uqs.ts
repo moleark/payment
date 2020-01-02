@@ -1,9 +1,11 @@
-import { Query,Map,Tuid, Action } from "tonva";
+import { Query, Map, Tuid, Action } from "tonva";
 
 export interface UqPayment {
     SearchEasyBuziPayment: Query;
     SearchEasyBuziPaymentTaskAccount: Query;
-    AddEasyBuziPaymentTask:Action;
+    SearchPrintPaymentPending: Query;
+    AddEasyBuziPaymentTask: Action;
+    AddPrintPaymentTask: Action;
 }
 
 export interface UqSalesTask {

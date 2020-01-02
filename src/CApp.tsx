@@ -5,6 +5,7 @@ import { VMain } from './ui/main';
 import { CHome } from "./home/CHome";
 import { CPayment } from './payment/CPayment';
 import { CPendingPayment } from './payment/CPendingPayment';
+import { CPrintPendingPayment } from './payment/CPrintPendingPayment';
 
 export class CApp extends CAppBase {
     get uqs(): UQs { return this._uqs as UQs };
@@ -14,6 +15,7 @@ export class CApp extends CAppBase {
     cHome: CHome;
     cPayment: CPayment;
     cPendingPayment: CPendingPayment;
+    cPrintPendingPayment: CPrintPendingPayment;
 
     protected newC<T extends CUqBase>(type: IConstructor<T>): T {
         return new type(this);
@@ -24,6 +26,7 @@ export class CApp extends CAppBase {
         this.cHome = this.newC(CHome);
         this.cPayment = this.newC(CPayment);
         this.cPendingPayment = this.newC(CPendingPayment);
+        this.cPrintPendingPayment = this.newC(CPrintPendingPayment);
         let promises: PromiseLike<void>[] = [];
         promises.push(this.cPendingPayment.start());
         await Promise.all(promises);

@@ -33,6 +33,6 @@ export class VPendingPayment extends View<CPendingPayment> {
 
     private content = observer(() => {
         let { cashouts } = this.controller;
-        return <List items={cashouts} item={{ render: this.renderRootCategory }} none="目前还没有要处理待办事宜哦！" />;
+        return <List items={cashouts} item={{ render: this.renderRootCategory }} none="目前还没有待打印任务哦！" />;
     });
 } 

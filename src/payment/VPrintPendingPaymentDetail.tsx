@@ -4,14 +4,14 @@ import { Schema } from 'tonva';
 import _ from 'lodash';
 import { tv } from 'tonva';
 import dayjs from 'dayjs';
-import { CPendingPayment } from './CPendingPayment';
+import { CPrintPendingPayment } from './CPrintPendingPayment';
 import { ProductImage } from 'tools/productImage';
 
 const schema: Schema = [
     { name: 'taskid', type: 'id', required: false },
 ];
 
-export class VPendingPaymentDetail extends VPage<CPendingPayment> {
+export class VPrintPendingPaymentDetail extends VPage<CPrintPendingPayment> {
 
     private form: Form;
     private task: any;
@@ -32,7 +32,7 @@ export class VPendingPaymentDetail extends VPage<CPendingPayment> {
     async open(task: any) {
         this.task = task;
         let { agency } = task;
-        let account = await this.controller.getAccounts(agency.id);
+        let account = await this.controller.cApp.cPendingPayment.getAccounts(agency.id);
         if (account != undefined) {
             let { telephone, identitycard, identityicon, subbranchbank, bankaccountnumber, identityname } = account;
             this.telephone = telephone;
@@ -73,7 +73,7 @@ export class VPendingPaymentDetail extends VPage<CPendingPayment> {
                 <div className="flex-grow-1"></div>
                 <button type="button"
                     className="btn btn-primary"
-                    onClick={this.onSaveTask}>&nbsp;已打印&nbsp;</button>
+                    onClick={this.onSaveTask}>&nbsp;已支出&nbsp;</button>
             </div>;
         } else {
             footer = <div className="btn w-100">
@@ -125,7 +125,7 @@ export class VPendingPaymentDetail extends VPage<CPendingPayment> {
                 <div className="cat-root-sub">
                     <div><span className="py-2 px-4 align-middle text-muted small">支付金额</span><span className="py-2 px-4 small">人民币 {price}</span></div>
                     <div><span className="py-2 px-4 align-middle text-muted small">申请时间</span><span className="py-2 px-4 small">{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</span></div>
-                    <div><span className="py-2 px-4 align-middle text-muted small">状态</span><span className="py-2 px-5 small text-danger">&nbsp;未打印</span></div>
+                    <div><span className="py-2 px-4 align-middle text-muted small">状态</span><span className="py-2 px-5 small text-danger">&nbsp;已打印</span></div>
                 </div>
             </div>
             <div className="p-3">
