@@ -73,7 +73,7 @@ export class VPendingPaymentDetail extends VPage<CPendingPayment> {
                 <div className="flex-grow-1"></div>
                 <button type="button"
                     className="btn btn-primary"
-                    onClick={this.onSaveTask}>&nbsp;已打印&nbsp;</button>
+                    onClick={this.onSaveTask}>&nbsp;打&nbsp;印&nbsp;</button>
             </div>;
         } else {
             footer = <div className="btn w-100">
