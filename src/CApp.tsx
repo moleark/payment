@@ -1,14 +1,13 @@
 import { CAppBase, IConstructor, User, nav } from "tonva";
 import { UQs } from "./uqs";
-import { CUqBase } from "./CBase";
+import { CUqBase, CUqApp } from "./CBase";
 import { VMain } from './ui/main';
 import { CHome } from "./home/CHome";
 import { CPayment } from './payment/CPayment';
 import { CPendingPayment } from './payment/CPendingPayment';
 import { CPrintPendingPayment } from './payment/CPrintPendingPayment';
 
-export class CApp extends CAppBase {
-    get uqs(): UQs { return this._uqs as UQs };
+export class CApp extends CUqApp {
 
     topKey: any;
 

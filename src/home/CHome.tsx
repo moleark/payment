@@ -7,7 +7,7 @@ export class CHome extends CUqBase {
 
         let { cPendingPayment } = this.cApp;
         await cPendingPayment.start();
-        this.openVPage(VHome);
+        // this.openVPage(VHome);
     }
 
     toCashOutList = () => {

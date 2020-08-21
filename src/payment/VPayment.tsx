@@ -62,7 +62,7 @@ export class VPayment extends VPage<CPayment> {
         return <this.page />
     }
 
-    private content = observer(() => {
+    content = observer(() => {
         let { cashouthistorys } = this.controller;
         return <>
             {cashouthistorys.map(v => this.renderRootCategory(v, undefined))}</>;
