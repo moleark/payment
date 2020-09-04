@@ -9,7 +9,7 @@ export class VHome extends View<CHome> {
     }
 
     render(param: any): JSX.Element {
-        return <this.page />
+        return React.createElement(this.page);
     }
 
     private page = () => {
@@ -17,7 +17,7 @@ export class VHome extends View<CHome> {
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>待打印</span>
         </header>;
         return <Page header={header} headerClassName="bg-primary">
-            <this.content />
+            {React.createElement(this.content)}
         </Page>;
     };
 

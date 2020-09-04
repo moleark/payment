@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './App.css';
-import { NavView, nav,start } from 'tonva';
+import { NavView, nav, start } from 'tonva';
 import { CApp } from './CApp';
 import { appConfig } from './configuration';
 
@@ -12,7 +12,7 @@ class App extends React.Component {
     await start(CApp, appConfig);
   }
   public render() {
-    return <NavView onLogined={this.onLogined} notLogined={this.onLogined} />
+    return <NavView onLogined={this.onLogined} />
   }
 }
 

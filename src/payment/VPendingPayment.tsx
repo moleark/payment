@@ -22,13 +22,13 @@ export class VPendingPayment extends View<CPendingPayment> {
         let right = <div><i className="fa fa-jpy fa-jpy-2x" aria-hidden="true"></i>{price}
             &nbsp;&nbsp; <FA name="chevron-right" className="text-primary" /></div>
         return <LMR left={left} right={right} className="px-3 py-2" onClick={() => this.controller.onWebUserNameSelected(item)}>
-            {/* <div>{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</div> */ <div><EasyDate date={date} /></div>}
+            <div><EasyDate date={date} /></div>
             <div className="small text-muted">{this.controller.renderInventory(agency.id)}</div>
         </LMR>
     }
 
     render(param: any): JSX.Element {
-        return <this.content />
+        return React.createElement(this.content);
     }
 
     private content = observer(() => {

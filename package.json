@@ -24,7 +24,7 @@
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-scripts": "^3.4.3",
-    "tonva": "^1.6.3",
+    "tonva": "^1.6.10",
     "typescript": "3.6.4"
   },
   "scripts": {

@@ -24,8 +24,7 @@ export class VMain extends VPage<CApp> {
                 load: load,
             }
         });
-        return <Page header={false}>
-            <Tabs tabs={faceTabs} />
+        return <Page header={false} tabsProps={{ tabs: faceTabs }}>
         </Page>;
     }
 }

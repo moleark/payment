@@ -54,17 +54,18 @@ export class VPayment extends VPage<CPayment> {
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>已支出</span>
         </header>;
         return <Page header={header} headerClassName="bg-primary">
-            <this.content />
+            {React.createElement(this.content)}
         </Page>;
     };
 
     render() {
-        return <this.page />
+        return React.createElement(this.page);
     }
 
     content = observer(() => {
         let { cashouthistorys } = this.controller;
         return <>
-            {cashouthistorys.map(v => this.renderRootCategory(v, undefined))}</>;
+            {cashouthistorys.map(v => this.renderRootCategory(v, undefined))}
+        </>;
     });
 } 

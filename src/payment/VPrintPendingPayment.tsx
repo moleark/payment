@@ -21,12 +21,12 @@ export class VPrintPendingPayment extends View<CPrintPendingPayment> {
             <span className="h5 align-middle" style={{ textAlign: 'center' }}>待支出</span>
         </header>;
         return <Page header={header} headerClassName="bg-primary">
-            <this.content />
+            {React.createElement(this.content)}
         </Page>;
     };
 
     render() {
-        return <this.page />
+        return React.createElement(this.page);
     }
 
     private content = observer(() => {
