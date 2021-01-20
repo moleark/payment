@@ -5,7 +5,7 @@ PENDING EasyBuziPaymentPending ver 0.1 (
     taskid bigint,    --任务号
     price dec(12, 2) not null,
     currency ID Currency,
-    date,
+    date datetime not null,
 );
 
 //待付款PENDING
@@ -15,7 +15,7 @@ PENDING PrintPaymentPending ver 0.1 (
     taskid bigint,    --任务号
     price dec(12, 2) not null,
     currency ID Currency,
-    date,
+    date datetime not null,
 );
 
 BOOK EasyBuziPaymentTaskAccount (
@@ -102,14 +102,15 @@ ACTION AddPrintPaymentTask(
     if(result=1){
         --记录打印PENDING
         var pid ID;
-        PENDING PrintPaymentPending +(agency:agency,taskid:taskid,price:price,currency:currency) to pid;
+        PENDING PrintPaymentPending +(agency:agency, taskid:taskid, price:price, currency:currency, date:now()) to pid;
     }
     --删除待打印Pending
     Pending EasyBuziPaymentPending - at pendingid;
     --通过bus返回已驳回结果,并记录已驳回状态
     if(result=0){
-        book EasyBuziPaymentTaskAccount at (taskid,agency) set price=price,currency=currency,createdate=createdate,result=result,comments=comments,date=now();
-        bus paymentresultBus.paymentresult set withdrawal=taskid,result=result,comments=comments;
+        book EasyBuziPaymentTaskAccount at (taskid,agency) 
+            set price = price, currency = currency, createdate = createdate, result = result, comments = comments, date = now();
+        bus paymentresultBus.paymentresult set withdrawal = taskid, result = result, comments = comments;
     }
 };
 
@@ -134,9 +135,10 @@ ACTION AddEasyBuziPaymentTask(
     WHERE   a.taskid=taskid;
 
     --记录付款结果
-    book EasyBuziPaymentTaskAccount at (taskid,agency) set price=price,currency=currency,createdate=createdate,result=result,comments=comments,date=now();
+    book EasyBuziPaymentTaskAccount at (taskid,agency) 
+        set price = price, currency = currency, createdate = createdate, result = result, comments = comments, date = now();
     --删除待付款pending
     Pending PrintPaymentPending - at pendingid;
     --通过bus返回付款结果
-    bus paymentresultBus.paymentresult set withdrawal=taskid,result=result,comments=comments;
+    bus paymentresultBus.paymentresult set withdrawal = taskid, result = result, comments = comments;
 };
