@@ -1,3 +1,13 @@
+/*
+ * 申请付款的流程是这样的：
+ * 1. 申请人在salestask中提交申请单withdrawal(申请单状态记录在withdrawalStateBook中，状态变化过程记录在withdrawalHistory中)
+ * 2. 申请后发送agentBus.paymentrequest，在ebpayment中接收，写入EasyBuziPaymentPending中，财务据此进行审核；
+ * 3. 财务审核通过后，将申请内容写入PrintPaymentPending中，等待付款；
+ * 4. 财务付款后，将付款结果写入EasyBuziPaymentTaskCount中，同时发送paymentresultBus.paymentresult；
+ * 5. 在salestask中接收此bus，更新申请单状态(withdrawalSteteBook)并记录历史(withdrawalHistory)
+*/
+
+
 //待打印PENDING
 PENDING EasyBuziPaymentPending ver 0.1 (
     id,

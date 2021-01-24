@@ -2,6 +2,6 @@ BUS paymentrequestBus from 百灵威系统工程部/agent
     ACCEPT paymentrequest {
         --记录提现待付款记录
         var pid ID;
-        PENDING EasyBuziPaymentPending +(agency:agency,taskid:withdrawal,price:amount,currency:currency) to pid;
+        PENDING EasyBuziPaymentPending +(agency:agency, taskid:withdrawal, price:amount, currency:currency, date:now()) to pid;
     };
 BUS paymentresultBus from 百灵威系统工程部/easyBuziPayment;
