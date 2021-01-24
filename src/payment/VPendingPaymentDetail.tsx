@@ -67,17 +67,24 @@ export class VPendingPaymentDetail extends VPage<CPendingPayment> {
         let taskData = _.clone(this.task);
         let { date, price } = taskData;
         let footer: any;
-        if (this.telephone !== null && this.subbranchbank !== null && this.identityname !== null && this.identitycard !== null && this.identityicon !== null && this.bankaccountnumber !== null) {
+        if (this.telephone !== null && this.subbranchbank !== null
+            && this.identityname !== null && this.identitycard !== null
+            && this.identityicon !== null && this.bankaccountnumber !== null) {
             footer = <div className="d-flex px-3 py-2">
-                <button type="button" className="btn btn-outline-info" onClick={() => this.controller.onNewRejectTask(taskData)} >&nbsp;驳&nbsp;回&nbsp;</button>
+                <button type="button" className="btn btn-outline-info" onClick={() => this.controller.onNewRejectTask(taskData)} >
+                    &nbsp;驳&nbsp;回&nbsp;
+                </button>
                 <div className="flex-grow-1"></div>
                 <button type="button"
                     className="btn btn-primary"
-                    onClick={this.onSaveTask}>&nbsp;打&nbsp;印&nbsp;</button>
+                    onClick={this.onSaveTask}>&nbsp;打&nbsp;印&nbsp;
+                </button>
             </div>;
         } else {
             footer = <div className="btn w-100">
-                <button type="button" className="btn btn-outline-info" onClick={() => this.controller.onNewRejectTask(taskData)} >&nbsp;驳&nbsp;回&nbsp;</button>
+                <button type="button" className="btn btn-outline-info" onClick={() => this.controller.onNewRejectTask(taskData)} >
+                    &nbsp;驳&nbsp;回&nbsp;
+                </button>
             </div>;
         }
 
@@ -99,33 +106,68 @@ export class VPendingPaymentDetail extends VPage<CPendingPayment> {
             </div>
             <div className="py-2 bg-white mb-3">
                 <div className="cursor-pointer">
-                    &nbsp;<FA className="align-middle text-warning" name="user-circle" /><span className="h6 py-2 px-2 align-middle small"><b> 收方身份信息</b></span>
+                    <FA className="align-middle text-warning" name="user-circle" />
+                    <span className="h6 py-2 px-2 align-middle small"><b> 收方身份信息</b></span>
                 </div>
                 <div className="cat-root-sub">
-                    <div><span className="py-2 px-4 align-middle text-muted small">收方姓名</span><span className="py-2 px-4 small">{this.identityname}</span></div>
-                    <div><span className="py-2 px-4 align-middle text-muted small">收方手机</span><span className="py-2 px-4 small">{this.telephone}</span></div>
-                    <div><p><span className="py-2 px-4 align-middle text-muted small">收方身份证号</span><span className="py-2 small">{this.identitycard}</span></p></div>
-                    <div><p><span className="py-2 px-4 align-middle text-muted small">身份证复印件</span><span className="py-2 small">{identityimage}</span></p></div>
+                    <div>
+                        <span className="py-2 px-4 align-middle text-muted small">收方姓名</span>
+                        <span className="py-2 px-4 small">{this.identityname}</span>
+                    </div>
+                    <div>
+                        <span className="py-2 px-4 align-middle text-muted small">收方手机</span>
+                        <span className="py-2 px-4 small">{this.telephone}</span>
+                    </div>
+                    <div>
+                        <p>
+                            <span className="py-2 px-4 align-middle text-muted small">收方身份证号</span>
+                            <span className="py-2 small">{this.identitycard}</span>
+                        </p>
+                    </div>
+                    <div>
+                        <p>
+                            <span className="py-2 px-4 align-middle text-muted small">身份证复印件</span>
+                            <span className="py-2 small">{identityimage}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
             <div className="py-2 bg-white mb-3">
                 <div className="cursor-pointer">
-                    &nbsp;<FA className="align-middle text-success" name="credit-card" /><span className="h6 py-2 px-2 align-middle small"><b> 收方银行信息</b></span>
+                    <FA className="align-middle text-success" name="credit-card" />
+                    <span className="h6 py-2 px-2 align-middle small"><b> 收方银行信息</b></span>
                 </div>
                 <div className="cat-root-sub">
-                    <div><span className="py-2 px-4 pr-5 align-middle text-muted small">收方开户名</span><span className="py-2 small">{this.identityname}</span></div>
-                    <div><span className="py-2 px-4 align-middle text-muted small">收方银行账号</span><span className="py-2 px-2 small">{this.bankaccountnumber}</span></div>
-                    <div><span className="py-2 px-4 align-middle text-muted small">收方开户行支行</span><span className="py-2 small">{this.subbranchbank}</span></div>
+                    <div>
+                        <span className="py-2 px-4 pr-5 align-middle text-muted small">收方开户名</span>
+                        <span className="py-2 small">{this.identityname}</span>
+                    </div>
+                    <div><span className="py-2 px-4 align-middle text-muted small">收方银行账号</span>
+                        <span className="py-2 px-2 small">{this.bankaccountnumber}</span>
+                    </div>
+                    <div><span className="py-2 px-4 align-middle text-muted small">收方开户行支行</span>
+                        <span className="py-2 small">{this.subbranchbank}</span>
+                    </div>
                 </div>
             </div>
             <div className="py-2 bg-white mb-3">
                 <div className="cursor-pointer">
-                    &nbsp;<FA className="align-middle text-danger" name="bookmark" /><span className="h6 py-2 px-2 align-middle small"><b> 详情</b></span>
+                    &nbsp;<FA className="align-middle text-danger" name="bookmark" />
+                    <span className="h6 py-2 px-2 align-middle small"><b> 详情</b></span>
                 </div>
                 <div className="cat-root-sub">
-                    <div><span className="py-2 px-4 align-middle text-muted small">支付金额</span><span className="py-2 px-4 small">人民币 {price}</span></div>
-                    <div><span className="py-2 px-4 align-middle text-muted small">申请时间</span><span className="py-2 px-4 small">{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</span></div>
-                    <div><span className="py-2 px-4 align-middle text-muted small">状态</span><span className="py-2 px-5 small text-danger">&nbsp;未打印</span></div>
+                    <div>
+                        <span className="py-2 px-4 align-middle text-muted small">支付金额</span>
+                        <span className="py-2 px-4 small">人民币 {price}</span>
+                    </div>
+                    <div>
+                        <span className="py-2 px-4 align-middle text-muted small">申请时间</span>
+                        <span className="py-2 px-4 small">{dayjs(date).format('YYYY-MM-DD HH:mm:ss')}</span>
+                    </div>
+                    <div>
+                        <span className="py-2 px-4 align-middle text-muted small">状态</span>
+                        <span className="py-2 px-5 small text-danger">&nbsp;未打印</span>
+                    </div>
                 </div>
             </div>
             <div className="p-3">
